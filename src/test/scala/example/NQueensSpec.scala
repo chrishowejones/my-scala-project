@@ -24,7 +24,7 @@ class NQueensSpec extends FlatSpec with Matchers {
     NQueens.inCheck((3, 3), (8, 2)) shouldBe false
   }
 
-  "A Queen" must " be safe if all she is not inCheck from any of the queens in the current list of solutions" in {
+  "A Queen" must " be safe if she is not inCheck from any of the queens in the current list of solutions" in {
     NQueens.isSafe((1, 1), List((3, 5), (8, 3), (2, 7))) shouldBe true
   }
 
