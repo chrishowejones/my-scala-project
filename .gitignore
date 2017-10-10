@@ -1,0 +1,4 @@
+.ensime*
+.idea
+target/
+*/target/
