@@ -5,14 +5,16 @@ package example
 /** A documentation comment */
 object MyModule {
 
-  def abs(n: Int): Int =
+  def abs(n: Int): Int = {
+    require(n > Int.MinValue)
     if (n < 0) -n
     else n
+  }
 
   def factorial(n: Int): Int = {
     def go(n: Int, acc: Int): Int = {
       if (n <= 0) acc
-      else go(n-1, n*acc)
+      else go(n - 1, n * acc)
     }
 
     go(n, 1)
@@ -25,9 +27,9 @@ object MyModule {
 
   def fibonacci(n: Int): Int = {
     @annotation.tailrec
-    def go(n:Int, a: Int, b:Int): Int =
+    def go(n: Int, a: Int, b: Int): Int =
       if (n <= 1) a
-      else go(n-1, b, a + b)
+      else go(n - 1, b, a + b)
 
     go(n, 0, 1)
   }
