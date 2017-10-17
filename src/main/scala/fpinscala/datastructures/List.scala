@@ -95,4 +95,10 @@ object List {
   def foldRightUsingFoldLeft[A, B] (as: List[A], z: B) (f: (A, B) => B): B =
     foldLeft(List.reverse(as), z) ((b, a) => f(a, b))
 
+  def appendUsingFoldLeft[A](a1: List[A], a2: List[A]): List[A] =
+    foldLeft(List.reverse(a1), a2)((l, a) => Cons(a, l))
+
+  def appendUsingFoldRight[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)((a, l) => Cons(a, l))
+
 }
