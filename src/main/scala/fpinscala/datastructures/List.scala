@@ -117,4 +117,7 @@ object List {
 
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
     foldRight(as, Nil: List[B])((a, acc) => foldRight(f(a), acc)((b, res) => Cons(b, res)))
+
+  def flatMap2[A, B](as: List[A])(f: A => List[B]): List[B] =
+    concat(map(as)(f))
 }
