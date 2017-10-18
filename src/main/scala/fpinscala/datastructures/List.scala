@@ -104,4 +104,7 @@ object List {
   def concat[A](ll: List[List[A]]): List[A] =
     foldRight(ll, Nil: List[A]) (List.append)
 
+  def incrementAll(ns: List[Int]): List[Int] =
+    foldRight(ns, Nil: List[Int]) ((n, acc) => Cons(n + 1, acc))
+
 }
