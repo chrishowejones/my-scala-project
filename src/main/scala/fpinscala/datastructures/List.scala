@@ -107,4 +107,7 @@ object List {
   def incrementAll(ns: List[Int]): List[Int] =
     foldRight(ns, Nil: List[Int]) ((n, acc) => Cons(n + 1, acc))
 
+  def doublesToStrings(ds: List[Double]): List[String] =
+    foldRight(ds, Nil: List[String])((d, acc) => Cons(d.toString, acc))
+
 }
