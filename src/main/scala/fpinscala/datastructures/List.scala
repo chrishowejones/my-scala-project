@@ -55,7 +55,6 @@ object List {
     case Cons(h, t) => Cons(h, init(t))
   }
 
-
   def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B =
     as match {
       case Nil => z
@@ -89,11 +88,11 @@ object List {
   def reverse[A](ns: List[A]): List[A] =
     foldLeft(ns, Nil: List[A])((acc, n) => Cons(n, acc))
 
-  def foldLeftUsingFoldRight[A, B] (as: List[A], z: B)(f: (B, A) => B): B =
+  def foldLeftUsingFoldRight[A, B](as: List[A], z: B)(f: (B, A) => B): B =
     foldRight(as, (b: B) => b)((a, wrapper) => b => wrapper(f(b, a)))(z)
 
-  def foldRightUsingFoldLeft[A, B] (as: List[A], z: B) (f: (A, B) => B): B =
-    foldLeft(List.reverse(as), z) ((b, a) => f(a, b))
+  def foldRightUsingFoldLeft[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(List.reverse(as), z)((b, a) => f(a, b))
 
   def appendUsingFoldLeft[A](a1: List[A], a2: List[A]): List[A] =
     foldLeft(List.reverse(a1), a2)((l, a) => Cons(a, l))
@@ -102,12 +101,15 @@ object List {
     foldRight(a1, a2)((a, l) => Cons(a, l))
 
   def concat[A](ll: List[List[A]]): List[A] =
-    foldRight(ll, Nil: List[A]) (List.append)
+    foldRight(ll, Nil: List[A])(List.append)
 
   def incrementAll(ns: List[Int]): List[Int] =
-    foldRight(ns, Nil: List[Int]) ((n, acc) => Cons(n + 1, acc))
+    foldRight(ns, Nil: List[Int])((n, acc) => Cons(n + 1, acc))
 
   def doublesToStrings(ds: List[Double]): List[String] =
     foldRight(ds, Nil: List[String])((d, acc) => Cons(d.toString, acc))
+
+  def map[A, B](as: List[A])(f: A => B): List[B] =
+    foldRight(as, Nil: List[B])((a, acc) => Cons(f(a), acc))
 
 }
