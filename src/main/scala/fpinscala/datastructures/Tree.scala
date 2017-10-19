@@ -17,4 +17,20 @@ object Tree {
     countNodes(t, 0)
   }
 
+  def maximum(t: Tree[Int]): Int = {
+
+    def maxNode(ti: Tree[Int], m: Int): Int =
+      ti match {
+        case Leaf(i) => if (i > m) i else m
+        case Branch(l, r) => {
+          val ml = maxNode(l, m)
+          val mr = maxNode(r, m)
+          if (ml > mr) ml else mr
+        }
+      }
+
+    maxNode(t, 0)
+  }
+
+
 }
