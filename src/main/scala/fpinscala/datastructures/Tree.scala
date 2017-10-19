@@ -32,5 +32,19 @@ object Tree {
     maxNode(t, 0)
   }
 
+  def depth[A](t: Tree[A]): Int = {
+
+    def maxPath(t1: Tree[A], d: Int): Int =
+      t1 match {
+        case Leaf(_) => 1
+        case Branch(i, r) => {
+          val ld = maxPath(i, d) + 1
+          val rd = maxPath(r, d) + 1
+          if (ld > rd) ld else rd
+        }
+      }
+
+    maxPath(t, 0)
+  }
 
 }
