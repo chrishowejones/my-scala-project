@@ -18,15 +18,10 @@ object Tree {
   }
 
   def maximum(t: Tree[Int]): Int = {
-
     def maxNode(ti: Tree[Int], m: Int): Int =
       ti match {
-        case Leaf(i) => if (i > m) i else m
-        case Branch(l, r) => {
-          val ml = maxNode(l, m)
-          val mr = maxNode(r, m)
-          if (ml > mr) ml else mr
-        }
+        case Leaf(i) => i
+        case Branch(l, r) => maximum(l) max maximum(r)
       }
 
     maxNode(t, 0)
@@ -37,11 +32,7 @@ object Tree {
     def maxPath(t1: Tree[A], d: Int): Int =
       t1 match {
         case Leaf(_) => 1
-        case Branch(i, r) => {
-          val ld = maxPath(i, d) + 1
-          val rd = maxPath(r, d) + 1
-          if (ld > rd) ld else rd
-        }
+        case Branch(l, r) => (depth(l) max depth(r)) + 1
       }
 
     maxPath(t, 0)
@@ -54,4 +45,21 @@ object Tree {
     }
   }
 
+  def fold[A, B](t: Tree[A])(l: A => B)(b: (B, B) => B): B =
+    t match {
+      case Leaf(a) => l(a)
+      case Branch(lft, rgt) => b(fold(lft)(l)(b), fold(rgt)(l)(b))
+    }
+
+  def size2[A](t: Tree[A]): Int =
+    fold(t)(_ => 1)((l, r) => l + r + 1)
+
+  def maximum2(t: Tree[Int]): Int =
+    fold(t)(a => a)((l: Int, r: Int) => l max r)
+
+  def depth2[A](t: Tree[A]): Int =
+    fold(t)(_ => 1)((l: Int, r: Int) => (l + 1) max (r + 1))
+
+  def map2[A, B](t: Tree[A])(f: A => B): Tree[B] =
+    fold(t)((a: A) => Leaf(f(a)): Tree[B])((l: Tree[B], r: Tree[B]) => Branch(l, r))
 }
