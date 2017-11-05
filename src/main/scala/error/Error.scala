@@ -21,8 +21,10 @@ trait Option[+A] {
   }
 
 
-  def orElse[B >: A](ob: => Option[B]): Option[B] = ???
   def filter(f: A => Boolean): Option[A] = ???
+  def orElse[B >: A](ob: => Option[B]): Option[B] =
+    this map(Some(_)) getOrElse ob
+
 }
 
 case class Some[+A](get: A) extends Option[A]
