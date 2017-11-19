@@ -29,6 +29,7 @@ trait Option[+A] {
       case Some(a) if f(a) => this
       case _ => None
     }
+
 }
 
 case class Some[+A](get: A) extends Option[A]
@@ -44,4 +45,45 @@ object Variance {
 
   def variance(xs: Seq[Double]): Option[Double] =
     mean(xs) flatMap(m => mean(xs.map(x => math.pow(x - m, 2))))
+}
+
+object Option {
+
+  def Try[A](a: => A): Option[A] =
+    try Some(a)
+    catch { case e: Exception => None }
+
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
+    a flatMap(a2 => b map (b2 => f(a2, b2)))
+  }
+
+  def sequence[A](a: List[Option[A]]): Option[List[A]] =
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => h flatMap (h2 => sequence(t) map (h2 :: _))
+    }
+
+}
+
+object Insurance {
+
+  def insuranceRateQuote(age: Int, numberOfSpeedingTickets: Int): Double = {
+    numberOfSpeedingTickets + (25.0 / age)
+  }
+
+  def parseInsuranceRateQuote(
+    age: String,
+    numberOfSpeedingTickets: String): Option[Double] = {
+    val optAge: Option[Int] = Option.Try(age.toInt)
+    val optTickets: Option[Int] = Option.Try(numberOfSpeedingTickets.toInt)
+    Option.map2(optAge, optTickets)(insuranceRateQuote(_, _))
+  }
+
+}
+
+object Sequence {
+
+  def parseInts(a: List[String]): Option[List[Int]] =
+    Option.sequence(a map (i => Option.Try(i.toInt)))
+
 }
