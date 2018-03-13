@@ -131,4 +131,7 @@ object Stream {
       val x1 = x + 1
       Some((x1, x1))
     })
+
+  def constant2[A](x: => A): Stream[A] = unfold(x)(n => Some((n, n)))
+
 }
