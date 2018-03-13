@@ -118,5 +118,10 @@ object Stream {
 
   }
 
+  def constant[A](x: => A): Stream[A] = {
+    lazy val tail: Stream[A] = cons(x, tail)
+    tail
+  }
+
 
 }
