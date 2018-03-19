@@ -85,6 +85,12 @@ trait Stream[+A] {
       case _ => None
     }
 
+  def take2(n: Int): Stream[A] =
+    unfold((this, n)){
+      case (Cons(h,t), 1) => Some((h(), (empty,0)))
+      case (Cons(h,t), n) if (n > 1) => Some((h(), (t(), n - 1)))
+      case _ => None
+    }
 }
 
 case object Empty extends Stream[Nothing]
