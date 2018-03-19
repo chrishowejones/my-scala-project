@@ -79,6 +79,12 @@ trait Stream[+A] {
     go(this, List()).reverse
   }
 
+  def map2[B](f: A => B): Stream[B] =
+    unfold(this) {
+      case Cons(h,t) => Some((f(h()), t()))
+      case _ => None
+    }
+
 }
 
 case object Empty extends Stream[Nothing]
@@ -113,9 +119,8 @@ object Stream {
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
     f(z) match {
       case Some((a, s)) => cons(a, unfold(s)(f))
-      case None => empty[A]
+      case None => empty
     }
-
   }
 
   def constant[A](x: => A): Stream[A] = {
