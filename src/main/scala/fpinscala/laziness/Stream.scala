@@ -87,10 +87,17 @@ trait Stream[+A] {
 
   def take2(n: Int): Stream[A] =
     unfold((this, n)){
-      case (Cons(h,t), 1) => Some((h(), (empty,0)))
+      case (Cons(h,t), 1) => Some((h(), (empty, 0)))
       case (Cons(h,t), n) if (n > 1) => Some((h(), (t(), n - 1)))
       case _ => None
     }
+
+  def takeWhile3(p: A => Boolean): Stream[A] =
+    unfold(this) {
+      case (Cons(h,t)) if (p(h())) => Some((h(), t()))
+      case _ => None
+    }
+
 }
 
 case object Empty extends Stream[Nothing]
@@ -144,5 +151,6 @@ object Stream {
     })
 
   def constant2[A](x: => A): Stream[A] = unfold(x)(n => Some((n, n)))
+
 
 }
