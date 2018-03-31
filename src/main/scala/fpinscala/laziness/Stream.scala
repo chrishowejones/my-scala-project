@@ -113,6 +113,9 @@ trait Stream[+A] {
       case _ => None
     }
 
+  def startsWithUnfold[A](s: Stream[A]): Boolean =
+    zipAll(s).takeWhile3(!_._2.isEmpty) forAll {
+      case (h1,h2) => h1 == h2
     }
 
 }
