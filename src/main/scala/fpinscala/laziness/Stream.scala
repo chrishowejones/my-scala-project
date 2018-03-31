@@ -124,6 +124,9 @@ trait Stream[+A] {
       case s => Some((s, s drop 1))
     } append Stream(empty)
 
+  def hasSubsequence[A](s: Stream[A]): Boolean =
+    tails exists (_ startsWithUnfold s)
+
 }
 
 case object Empty extends Stream[Nothing]
