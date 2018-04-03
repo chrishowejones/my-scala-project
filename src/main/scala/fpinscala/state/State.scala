@@ -35,6 +35,8 @@ object RNG {
     (if (i < 0) -(i + 1) else i, r)
   }
 
+  def nonNegativeEven: Rand[Int] =
+    map(nonNegativeInt)(i => i - i % 2)
 
   def double(rng: RNG): (Double, RNG) = {
     val (i, r) = nonNegativeInt(rng)
