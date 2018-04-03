@@ -117,6 +117,9 @@ object RNG {
 
   def map2UsingFlatMap[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
     flatMap(ra)(a => map(rb)(b => f(a, b)))
+
+  def rollDie: Rand[Int] = map(nonNegativeLessThan(6))(_ + 1)
+
 }
 
 case class State[S,+A](run: S => (A, S)) {
