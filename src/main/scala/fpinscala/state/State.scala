@@ -43,6 +43,9 @@ object RNG {
     (i / (Int.MaxValue.toDouble + 1), r)
   }
 
+  def doubleUsingMap: Rand[Double] =
+    map(nonNegativeInt)(i => (i / (Int.MaxValue.toDouble + 1)))
+
   def intDouble(rng: RNG): ((Int,Double), RNG) = {
     val (i, r) = rng.nextInt
     val (d, r2) = double(r)
