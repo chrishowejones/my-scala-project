@@ -134,6 +134,17 @@ case class State[S,+A](run: S => (A, S)) {
       val (a, s1) = run(s)
       f(a).run(s1)
     })
+
+  def sequence[S, A](sas: List[State[S, A]]): State[S, List[A]] = {
+    def go(s: S, actions: List[State[S, A]], acc: List[A]): (List[A], S) =
+      actions match {
+        case Nil => (acc.reverse, s)
+        case h :: t => h.run(s) match { case (a,s2) => go(s2, t, a :: acc) }
+      }
+
+    State((s: S) => go(s,sas,List()))
+  }
+
 }
 
 sealed trait Input
