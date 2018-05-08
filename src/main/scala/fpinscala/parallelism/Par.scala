@@ -99,6 +99,10 @@ object Par {
   def sequence[A](ps: List[Par[A]]): Par[List[A]] =
     map(sequenceBalanced(ps.toIndexedSeq))(_.toList)
 
+  def parMap[A,B](ps: List[A])(f: A => B): Par[List[B]] = fork {
+    val fbs: List[Par[B]]= ps.map(asyncF(f))
+    sequence(fbs)
+  }
 
   /* Gives us infix syntax for `Par`. */
   implicit def toParOps[A](p: Par[A]): ParOps[A] = new ParOps(p)
