@@ -71,10 +71,18 @@ object Par {
   if (run(es)(cond).get) t(es) // Notice we are blocking on the result of `cond`.
   else f(es)
 
+  def sequence_simple[A](l: List[Par[A]]): Par[List[A]] =
+    l.foldRight[Par[List[A]]](unit(List()))((h,t) => map2(h,t)(_ :: _))
+
+  def sequence[A](ps: List[Par[A]]): Par[List[A]] =
+    sequence_simple(ps)
+
   /* Gives us infix syntax for `Par`. */
   implicit def toParOps[A](p: Par[A]): ParOps[A] = new ParOps(p)
 
   class ParOps[A](p: Par[A]) {
+
+
 
 
   }
