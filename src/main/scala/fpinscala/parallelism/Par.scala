@@ -97,11 +97,18 @@ object Par {
   }
 
   def sequence[A](ps: List[Par[A]]): Par[List[A]] =
-    map(sequenceBalanced(ps.toIndexedSeq))(_.toList)
+    sequenceRight(ps)
+//    map(sequencenceBalanced(ps.toIndexedSeq))(_.toList)
 
   def parMap[A,B](ps: List[A])(f: A => B): Par[List[B]] = fork {
-    val fbs: List[Par[B]]= ps.map(asyncF(f))
+    val fbs: List[Par[B]] = ps.map(asyncF(f))
     sequence(fbs)
+  }
+
+  def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = {
+    val pars: List[Par[List[A]]] =
+      as map(asyncF((a: A) => if (f(a)) List(a) else List()))
+    map(sequence(pars))(_.flatten)
   }
 
   /* Gives us infix syntax for `Par`. */
@@ -125,4 +132,13 @@ object Examples {
         sum(l) + sum(r) // Recursively sum both halves and add the results together.
     }
 
+  val task: Callable[Int] =
+    () => {
+      try {
+        TimeUnit.SECONDS.sleep(1)
+        123
+      } catch {
+        case e: InterruptedException => throw new IllegalStateException("task interrupted", e)
+      }
+    }
 }
